@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usman Ali Shahid — CS Student & Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --bg:        #F8F9FB;
+      --surface:   #FFFFFF;
+      --border:    #E4E8EF;
+      --text:      #0F1923;
+      --muted:     #637083;
+      --accent:    #00C9A7;
+      --accent-dk: #009E84;
+      --accent-lt: #E6FBF7;
+      --navy:      #0D2137;
+      --font-disp: 'Syne', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --radius:    12px;
+      --shadow:    0 2px 16px rgba(15,25,35,0.07);
+      --shadow-hv: 0 8px 32px rgba(15,25,35,0.13);
+      --nav-h:     64px;
+      --trans:     0.22s ease;
+    }
+
+    /* ─── RESET ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+
+    /* ─── UTILITY ─────────────────────────────────────────────── */
+    .container { width: min(1100px, 92vw); margin: 0 auto; }
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: var(--font-disp);
+      font-size: clamp(1.7rem, 3vw, 2.3rem);
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+    .section-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 540px;
+      margin-bottom: 3rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.6rem 1.3rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--trans);
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-dk); transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-lt); }
+
+    /* ─── FADE-IN OBSERVER ────────────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── NAVBAR ──────────────────────────────────────────────── */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: rgba(248,249,251,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+      transition: box-shadow var(--trans);
+    }
+    #navbar.scrolled { box-shadow: var(--shadow); }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .nav-logo {
+      font-family: var(--font-disp);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .nav-links a {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color var(--trans);
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta {
+      padding: 0.42rem 1.1rem;
+      background: var(--accent);
+      color: #fff !important;
+      border-radius: 7px;
+      font-size: 0.84rem !important;
+      font-weight: 600 !important;
+    }
+    .nav-cta:hover { background: var(--accent-dk); color: #fff !important; }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px; height: 2px;
+      background: var(--navy);
+      border-radius: 2px;
+      transition: var(--trans);
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: var(--nav-h); left: 0; right: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 1.5rem;
+      flex-direction: column;
+      gap: 1.2rem;
+      z-index: 999;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color var(--trans);
+    }
+    .mobile-menu a:hover { color: var(--accent); }
+
+    /* ─── HERO ────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: var(--nav-h);
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.35;
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,201,167,0.12) 0%, transparent 70%);
+      top: -80px; right: -100px;
+      pointer-events: none;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 3rem;
+      position: relative;
+      z-index: 1;
+      padding: 4rem 0;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-lt);
+      padding: 0.3rem 0.85rem;
+      border-radius: 100px;
+      margin-bottom: 1.2rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .hero-name {
+      font-family: var(--font-disp);
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .hero-name .accent-dot { color: var(--accent); }
+    .hero-typed-wrap {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted);
+      font-weight: 400;
+      margin-bottom: 1.5rem;
+      min-height: 1.8rem;
+    }
+    #typed-text {
+      color: var(--navy);
+      font-weight: 600;
+    }
+    .cursor {
+      display: inline-block;
+      width: 2px; height: 1.1em;
+      background: var(--accent);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 0.85s infinite;
+    }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+
+    .hero-bio {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.75;
+      margin-bottom: 2rem;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .hero-stat-num {
+      font-family: var(--font-disp);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--navy);
+    }
+    .hero-stat-lbl {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ─── AVATAR / PROFILE PICTURE ────────────────────────────── */
+    .hero-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .hero-avatar {
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--accent);
+      box-shadow: 0 0 0 8px var(--accent-lt), var(--shadow-hv);
+      display: block;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .hero-avatar:hover {
+      transform: scale(1.03) rotate(-2deg);
+      box-shadow: 0 0 0 12px var(--accent-lt), var(--shadow-hv);
+    }
+    .avatar-ring {
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--accent), var(--accent-lt), var(--accent), var(--accent-dk), var(--accent));
+      padding: 4px;
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #fff calc(100% - 3px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #fff calc(100% - 3px));
+      animation: spin 8s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .avatar-badge {
+      position: absolute;
+      bottom: -8px; right: -8px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 100px;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      box-shadow: 0 4px 16px rgba(0,201,167,0.4);
+      border: 2px solid #fff;
+    }
+
+    /* ─── GOALS SECTION ───────────────────────────────────────── */
+    #goals {
+      padding: 6rem 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .goal-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1.75rem;
+      transition: transform var(--trans), box-shadow var(--trans);
+      text-align: center;
+    }
+    .goal-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hv);
+    }
+    .goal-icon {
+      font-size: 2.4rem;
+      margin-bottom: 0.75rem;
+    }
+    .goal-title {
+      font-family: var(--font-disp);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+    .goal-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ─── ABOUT ───────────────────────────────────────────────── */
+    #about {
+      padding: 6rem 0;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .about-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .about-card-icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.4rem;
+    }
+    .about-card-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--navy);
+    }
+    .about-card-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .about-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      font-size: 0.97rem;
+      line-height: 1.8;
+    }
+    .about-text strong { color: var(--navy); }
+
+    /* ─── SKILLS ──────────────────────────────────────────────── */
+    #skills {
+      padding: 6rem 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .skill-group {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .skill-group-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .skill-group-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .skill-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.32rem 0.75rem;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: var(--trans);
+      cursor: default;
+    }
+    .pill:hover {
+      border-color: var(--accent);
+      color: var(--accent-dk);
+      background: var(--accent-lt);
+    }
+    .pill-icon { font-size: 0.95rem; }
+
+    /* ─── PROJECTS ────────────────────────────────────────────── */
+    #projects {
+      padding: 6rem 0;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 1.5rem;
+    }
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans);
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hv);
+      border-color: rgba(0,201,167,0.3);
+    }
+    .project-card:hover::before { transform: scaleX(1); }
+
+    .project-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .project-icon {
+      width: 42px; height: 42px;
+      border-radius: 10px;
+      background: var(--accent-lt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .project-title {
+      font-family: var(--font-disp);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.3;
+    }
+    .project-desc {
+      font-size: 0.87rem;
+      color: var(--muted);
+      line-height: 1.7;
+      flex: 1;
+    }
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.22rem 0.6rem;
+      border-radius: 5px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .project-actions {
+      display: flex;
+      gap: 0.6rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .project-actions .btn { font-size: 0.8rem; padding: 0.45rem 0.9rem; }
+
+    /* ─── EDUCATION ───────────────────────────────────────────── */
+    #education {
+      padding: 6rem 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    .edu-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 2.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      max-width: 760px;
+    }
+    .edu-logo {
+      width: 56px; height: 56px;
+      border-radius: 12px;
+      background: var(--accent-lt);
+      border: 1.5px solid rgba(0,201,167,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+    .edu-degree {
+      font-family: var(--font-disp);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 0.2rem;
+    }
+    .edu-school {
+      font-size: 0.95rem;
+      color: var(--accent-dk);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    .edu-meta {
+      font-size: 0.83rem;
+      color: var(--muted);
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .edu-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .edu-courses {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    /* ─── CONTACT ─────────────────────────────────────────────── */
+    #contact {
+      padding: 6rem 0;
+      background: var(--navy);
+      border-top: 1px solid var(--border);
+    }
+    #contact .section-label { color: var(--accent); }
+    #contact .section-title { color: #fff; }
+    #contact .section-sub { color: rgba(255,255,255,0.55); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      transition: var(--trans);
+      color: #fff;
+    }
+    .contact-link:hover {
+      background: rgba(0,201,167,0.12);
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .contact-link-icon {
+      width: 40px; height: 40px;
+      border-radius: 9px;
+      background: rgba(0,201,167,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .contact-link-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.45);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .contact-link-val {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .contact-cta {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+    }
+    .contact-cta-title {
+      font-family: var(--font-disp);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+    .contact-cta-desc {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+    .contact-cta .btn-primary {
+      background: var(--accent);
+      font-size: 0.9rem;
+    }
+
+    /* ─── FOOTER ──────────────────────────────────────────────── */
+    footer {
+      background: #080F18;
+      padding: 1.5rem 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .hero-avatar-wrap {
+        order: -1;
+        display: flex;
+        justify-content: center;
+      }
+      .hero-avatar { width: 160px; height: 160px; }
+      .hero-actions { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .about-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .edu-card { flex-direction: column; }
+      .goals-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .about-cards { grid-template-columns: 1fr; }
+      .avatar-badge { font-size: 0.6rem; padding: 0.3rem 0.7rem; bottom: -4px; right: -4px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAVBAR ────────────────────────────────────────────── -->
+<nav id="navbar">
+  <div class="container nav-inner">
+    <a href="#hero" class="nav-logo">Usman<span>.</span></a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#goals">Goals</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#education">Education</a>
+      <a href="#contact" class="nav-cta">Contact</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about" class="mobile-link">About</a>
+  <a href="#goals" class="mobile-link">Goals</a>
+  <a href="#skills" class="mobile-link">Skills</a>
+  <a href="#projects" class="mobile-link">Projects</a>
+  <a href="#education" class="mobile-link">Education</a>
+  <a href="#contact" class="mobile-link">Contact</a>
+</div>
+
+<!-- ─── HERO ──────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">CS Student & Developer</div>
+      <h1 class="hero-name">
+        Usman Ali<br>Shahid<span class="accent-dot">.</span>
+      </h1>
+      <div class="hero-typed-wrap">
+        I build &nbsp;<span id="typed-text"></span><span class="cursor"></span>
+      </div>
+      <p class="hero-bio">
+        Second-year CS student at <strong>FAST-NUCES</strong> passionate about backend systems, DevSecOps, and intelligent algorithms. I craft efficient, purposeful software — from low-level Assembly to full-stack web systems.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+          View Projects
+        </a>
+        <a href="Resume.pdf" class="btn btn-outline" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Resume
+        </a>
+        <a href="https://github.com/usmanaliclouds-jpg" target="_blank" class="btn btn-outline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58 0-.28-.01-1.03-.02-2.03-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.51 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a href="https://www.linkedin.com/in/usmanalicloud/" target="_blank" class="btn btn-outline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM6.9 20.45H3.76V9H6.9v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45C23.2 24 24 23.23 24 22.27V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num">8+</div>
+          <div class="hero-stat-lbl">Projects Built</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">2nd</div>
+          <div class="hero-stat-lbl">Year @ NUCES</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-avatar-wrap">
+      <div class="avatar-ring"></div>
+      <img
+        src="pic.jpeg"
+        alt="Usman Ali Shahid"
+        class="hero-avatar"
+        onerror="this.src='https://avatars.githubusercontent.com/u/245835347?v=4'"
+      />
+      <div class="avatar-badge">🚀 Builder</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GOALS ──────────────────────────────────────────────── -->
+<section id="goals">
+  <div class="container">
+    <div class="section-label fade-up">My Vision</div>
+    <h2 class="section-title fade-up">What Drives Me</h2>
+    <p class="section-sub fade-up">Passionate about building the future through DevOps, Cloud, and AI.</p>
+    <div class="goals-grid">
+      <div class="goal-card fade-up">
+        <div class="goal-icon">☁️</div>
+        <div class="goal-title">Cloud & DevOps</div>
+        <div class="goal-desc">
+          Enthusiastic about mastering cloud platforms (AWS, Azure) and DevOps practices — CI/CD pipelines, infrastructure as code, and container orchestration with Kubernetes.
+        </div>
+      </div>
+      <div class="goal-card fade-up">
+        <div class="goal-icon">🤖</div>
+        <div class="goal-title">Artificial Intelligence</div>
+        <div class="goal-desc">
+          Deeply fascinated by intelligent systems — from neural networks and reinforcement learning to knowledge-based agents and automated decision-making.
+        </div>
+      </div>
+      <div class="goal-card fade-up">
+        <div class="goal-icon">🔧</div>
+        <div class="goal-title">DevSecOps</div>
+        <div class="goal-desc">
+          Committed to building secure, scalable systems by integrating security into every stage of development — automation, monitoring, and continuous improvement.
+        </div>
+      </div>
+      <div class="goal-card fade-up">
+        <div class="goal-icon">🚀</div>
+        <div class="goal-title">Full-Stack Engineering</div>
+        <div class="goal-desc">
+          Bridging the gap between frontend and backend, building robust systems from the ground up — with a strong emphasis on clean code and system design.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ABOUT ──────────────────────────────────────────────── -->
+<section id="about">
+  <div class="container">
+    <div class="section-label fade-up">Who I Am</div>
+    <h2 class="section-title fade-up">Built on fundamentals,<br>driven by curiosity.</h2>
+    <div class="about-grid">
+      <div class="about-text fade-up">
+        <p>
+          I'm <strong>Usman Ali Shahid</strong>, a second-year Computer Science student at FAST-NUCES with hands-on experience in backend development, Linux automation, and container technologies.
+        </p>
+        <p>
+          My projects span low-level x86 Assembly, AI-powered simulation systems, full-stack web apps with Oracle databases, and algorithm visualizers — I enjoy working across the entire stack and at every layer of abstraction.
+        </p>
+        <p>
+          I'm passionate about building efficient, purposeful software and continuously exploring new technologies to solve real-world problems.
+        </p>
+        <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <a href="mailto:usmanali.clouds@gmail.com" class="btn btn-primary">Get In Touch</a>
+          <a href="#projects" class="btn btn-outline">View My Work</a>
+        </div>
+      </div>
+      <div class="about-cards fade-up">
+        <div class="about-card">
+          <div class="about-card-icon">⚙️</div>
+          <div class="about-card-title">Backend & Systems</div>
+          <div class="about-card-desc">Python, Flask, Oracle DB, Docker, Linux automation</div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">🧠</div>
+          <div class="about-card-title">AI & Algorithms</div>
+          <div class="about-card-desc">BFS/A*, ANN, propositional logic, CSP solvers</div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">🛡️</div>
+          <div class="about-card-title">DevSecOps</div>
+          <div class="about-card-desc">Docker, Jenkins, Git, Linux, networking with Wireshark</div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">🖥️</div>
+          <div class="about-card-title">Low-Level Dev</div>
+          <div class="about-card-desc">x86 Assembly, C++, WebAssembly via Emscripten</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SKILLS ─────────────────────────────────────────────── -->
+<section id="skills">
+  <div class="container">
+    <div class="section-label fade-up">Technical Arsenal</div>
+    <h2 class="section-title fade-up">Skills &amp; Technologies</h2>
+    <p class="section-sub fade-up">Tools and languages I use to build things that work.</p>
+    <div class="skills-grid">
+      <div class="skill-group fade-up">
+        <div class="skill-group-label">Languages</div>
+        <div class="skill-pills">
+          <span class="pill"><span class="pill-icon">🐍</span> Python</span>
+          <span class="pill"><span class="pill-icon">⚡</span> C / C++</span>
+          <span class="pill"><span class="pill-icon">🗄️</span> SQL</span>
+          <span class="pill"><span class="pill-icon">🌐</span> JavaScript</span>
+          <span class="pill"><span class="pill-icon">🎨</span> HTML / CSS</span>
+          <span class="pill"><span class="pill-icon">📜</span> Bash</span>
+          <span class="pill"><span class="pill-icon">🔩</span> x86 Assembly</span>
+        </div>
+      </div>
+      <div class="skill-group fade-up">
+        <div class="skill-group-label">Frameworks & Libraries</div>
+        <div class="skill-pills">
+          <span class="pill"><span class="pill-icon">⚛️</span> React</span>
+          <span class="pill"><span class="pill-icon">🌶️</span> Flask</span>
+          <span class="pill"><span class="pill-icon">🖼️</span> Tkinter</span>
+          <span class="pill"><span class="pill-icon">📊</span> NumPy</span>
+          <span class="pill"><span class="pill-icon">📈</span> Matplotlib</span>
+          <span class="pill"><span class="pill-icon">🔧</span> Emscripten</span>
+        </div>
+      </div>
+      <div class="skill-group fade-up">
+        <div class="skill-group-label">DevOps & Cloud</div>
+        <div class="skill-pills">
+          <span class="pill"><span class="pill-icon">🐳</span> Docker</span>
+          <span class="pill"><span class="pill-icon">🔄</span> Jenkins</span>
+          <span class="pill"><span class="pill-icon">🐧</span> Linux</span>
+          <span class="pill"><span class="pill-icon">☁️</span> AWS</span>
+          <span class="pill"><span class="pill-icon">🔀</span> Git / GitHub</span>
+          <span class="pill"><span class="pill-icon">🌐</span> Wireshark</span>
+        </div>
+      </div>
+      <div class="skill-group fade-up">
+        <div class="skill-group-label">Databases & Tools</div>
+        <div class="skill-pills">
+          <span class="pill"><span class="pill-icon">🏛️</span> Oracle 11g</span>
+          <span class="pill"><span class="pill-icon">💻</span> VS Code</span>
+          <span class="pill"><span class="pill-icon">📓</span> Jupyter</span>
+          <span class="pill"><span class="pill-icon">🏗️</span> Visual Studio</span>
+          <span class="pill"><span class="pill-icon">🕸️</span> WebAssembly</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROJECTS ───────────────────────────────────────────── -->
+<section id="projects">
+  <div class="container">
+    <div class="section-label fade-up">Academic Work</div>
+    <h2 class="section-title fade-up">Projects</h2>
+    <p class="section-sub fade-up">Real problems, real solutions — built from scratch across every layer of the stack.</p>
+    <div class="projects-grid">
+
+      <!-- 1. Autonomous Wumpus -->
+      <div class="project-card fade-up">
+        <div class="project-header">
+          <div class="project-icon">🕵️</div>
+        </div>
+        <div class="project-title">Autonomous Wumpus Agent</div>
+        <div class="project-desc">
+          A production-grade Knowledge-Based Agent built with React. Uses formal Propositional Logic, CNF conversion, and Resolution Refutation to mathematically prove safe paths in a dynamic grid — backed by an intelligent BFS backtracking algorithm.
+        </div>
+        <div class="project-tags">
+          <span class="tag">React</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">Propositional Logic</span>
+          <span class="tag">AI / BFS</span>
+          <span class="tag">CSS</span>
+        </div>
+        <div class="project-actions">
+          <a href="https://github.com/usmanaliclouds-jpg/Autonomous-Wumpus" target="_blank" class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58 0-.28-.01-1.03-.02-2.03-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.51 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- 2. Smart City Traffic AI -->
+      <div class="project-card fade-up">
+        <div class="project-header">
+          <div class="project-icon">🏙️</div>
+        </div>
+        <div class="project-title">Smart City Traffic & Emergency AI</div>
+        <div class="project-desc">
+          Full AI simulation pipeline integrating ANN priority prediction, a Logic Knowledge Base, a CSP traffic signal scheduler, and BFS/UCS/A* route-finding — visualized in a 6-tab Matplotlib GUI with modular 7-component architecture.
+        </div>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Matplotlib</span>
+          <span class="tag">ANN</span>
+          <span class="tag">A* / BFS / UCS</span>
+          <span class="tag">CSP</span>
+          <span class="tag">Knowledge Base</span>
+        </div>
+        <div class="project-actions">
+          <a href="https://github.com/usmanaliclouds-jpg/Smart_City_Traffic_Management_System" target="_blank" class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58 0-.28-.01-1.03-.02-2.03-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.51 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- 3. SearchScope -->
+      <div class="project-card fade-up">
+        <div class="project-header">
+          <div class="project-icon">🧭</div>
+        </div>
+        <div class="project-title">SearchScope — Algorithm Visualizer</div>
+        <div class="project-desc">
+          Interactive Python/Tkinter suite visualizing BFS, UCS, Bi-Directional, DLS, and IDDFS in real-time. Bridges abstract graph theory and live execution — a sandbox for understanding search mechanics step-by-step.
+        </div>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Tkinter</span>
+          <span class="tag">BFS / UCS</span>
+          <span class="tag">IDDFS</span>
+          <span class="tag">Graph Theory</span>
+        </div>
+        <div class="project-actions">
+          <a href="https://github.com/usmanaliclouds-jpg/SearchScope-A-visual-lens-into-search-algorithms" target="_blank" class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58 0-.28-.01-1.03-.02-2.03-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.51 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- 4. Smart City Transport -->
+      <div class="project-card fade-up">
+        <div class="project-header">
+          <div class="project-icon">🚌</div>
+        </div>
+        <div class="project-title">Smart City Transport System</div>
+        <div class="project-desc">
+          Full-stack transport management system for Faisalabad with Oracle 11g — covering passenger ticketing, route management, and vehicle scheduling. Features complex PL/SQL triggers, stored procedures, and a Python/Flask REST API with a custom HTML/JS frontend.
+        </div>
+        <div class="project-tags">
+          <span class="tag">Oracle 11g</span>
+          <span class="tag">Python</span>
+          <span class="tag">Flask</span>
+          <span class="tag">PL/SQL</span>
+          <span class="tag">HTML / CSS / JS</span>
+        </div>
+        <div class="project-actions">
+          <a href="https://github.com/usmanaliclouds-jpg/SmartCityTransportSystem" target="_blank" class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58 0-.28-.01-1.03-.02-2.03-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.51 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- 5. DSA Visualizer -->
+      <div class="project-card fade-up">
+        <div class="project-header">
+          <div class="project-icon">🌲</div>
+        </div>
+        <div class="project-title">Interactive DSA Visualizer</div>
+        <div class="project-desc">
+          High-performance web visualizer covering AVL Trees, Heaps, Graphs, and hashing mechanisms. Compiled C++ core to WebAssembly via Emscripten for browser-native execution without plugins — no runtime overhead.
+        </div>
+        <div class="project-tags">
+          <span class="tag">C++</span>
+          <span class="tag">WebAssembly</span>
+          <span class="tag">Emscripten</span>
+          <span class="tag">HTML</span>
+          <span class="tag">AVL / Heap / Graph</span>
+        </div>
+        <div class="project-actions">
+          <a href="https://github.com/usmanaliclouds-jpg/Interactive_Data_Structure_Visualizer" target="_blank" class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58 0-.28-.01-1.03-.02-2.03-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.51 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- 6. CDAF -->
+      <div class="project-card fade-up">
+        <div class="project-header">
+          <div class="project-icon">🔢</div>
+        </div>
+        <div class="project-title">CDAF — Discrete Algorithms Framework</div>
+        <div class="project-desc">
+          Custom C++ framework implementing sets, dynamic arrays, and relations entirely without STL. Built graph algorithms from scratch — Dijkstra's shortest path and Kruskal's minimum spanning tree — for a deep understanding of data structure internals.
+        </div>
+        <div class="project-tags">
+          <span class="tag">C++</span>
+          <span class="tag">Dijkstra</span>
+          <span class="tag">Kruskal MST</span>
+          <span class="tag">No STL</span>
+          <span class="tag">Graph Algorithms</span>
+        </div>
+        <div class="project-actions">
+          <a href="https://github.com/usmanaliclouds-jpg/Computational-Discrete-Analysis-Framework" target="_blank" class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58 0-.28-.01-1.03-.02-2.03-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.51 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- 7. Atari Breakout -->
+      <div class="project-card fade-up">
+        <div class="project-header">
+          <div class="project-icon">🕹️</div>
+        </div>
+        <div class="project-title">Atari Breakout — x86 Assembly</div>
+        <div class="project-desc">
+          Fully functional Atari Breakout arcade game written entirely in x86 Assembly, with memory-level control over rendering and keyboard input. Features a dynamic power-up system and difficulty scaling for a complete gameplay experience.
+        </div>
+        <div class="project-tags">
+          <span class="tag">x86 Assembly</span>
+          <span class="tag">Low-Level</span>
+          <span class="tag">Game Dev</span>
+          <span class="tag">Memory Management</span>
+        </div>
+        <div class="project-actions">
+          <a href="https://github.com/usmanaliclouds-jpg/Atari_Breakout_Game_Assembly_8086" target="_blank" class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58 0-.28-.01-1.03-.02-2.03-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.51 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- 8. File Organizer Script -->
+      <div class="project-card fade-up">
+        <div class="project-header">
+          <div class="project-icon">📂</div>
+        </div>
+        <div class="project-title">File Organizer Automation Script</div>
+        <div class="project-desc">
+          Automated file sorting system in Bash that organizes files by extension using CLI argument handling. Designed for easy extensibility and scheduled execution via cron — hands-free, maintenance-free file management.
+        </div>
+        <div class="project-tags">
+          <span class="tag">Bash</span>
+          <span class="tag">Linux</span>
+          <span class="tag">CLI</span>
+          <span class="tag">cron</span>
+          <span class="tag">Automation</span>
+        </div>
+        <div class="project-actions">
+          <a href="https://github.com/usmanaliclouds-jpg/File-Organizer" target="_blank" class="btn btn-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58 0-.28-.01-1.03-.02-2.03-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.51 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── EDUCATION ───────────────────────────────────────────── -->
+<section id="education">
+  <div class="container">
+    <div class="section-label fade-up">Background</div>
+    <h2 class="section-title fade-up">Education</h2>
+    <p class="section-sub fade-up">Where the fundamentals were forged.</p>
+    <div class="edu-card fade-up">
+      <div class="edu-logo">🎓</div>
+      <div>
+        <div class="edu-degree">BS Computer Science</div>
+        <div class="edu-school">National University of Computer &amp; Emerging Sciences (FAST-NUCES)</div>
+        <div class="edu-meta">
+          <span>📅 September 2024 – June 2028</span>
+          <span>📊 CGPA: 2.92 / 4.0</span>
+          <span>📍 Faisalabad, Pakistan</span>
+        </div>
+        <div class="edu-courses">
+          <span class="tag">Data Structures &amp; Algorithms</span>
+          <span class="tag">Artificial Intelligence</span>
+          <span class="tag">Database Systems</span>
+          <span class="tag">Computer Organization</span>
+          <span class="tag">Discrete Mathematics</span>
+          <span class="tag">Operating Systems</span>
+          <span class="tag">Object-Oriented Programming</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACT ────────────────────────────────────────────── -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label fade-up">Let's Connect</div>
+    <h2 class="section-title fade-up">Get In Touch</h2>
+    <p class="section-sub fade-up">Open to collaborations and interesting problems. Reach out and let's build something.</p>
+    <div class="contact-grid">
+      <div class="contact-links fade-up">
+        <a href="mailto:usmanali.clouds@gmail.com" class="contact-link">
+          <div class="contact-link-icon">✉️</div>
+          <div>
+            <div class="contact-link-label">Email</div>
+            <div class="contact-link-val">usmanali.clouds@gmail.com</div>
+          </div>
+        </a>
+        <a href="https://www.linkedin.com/in/usmanalicloud/" target="_blank" class="contact-link">
+          <div class="contact-link-icon">💼</div>
+          <div>
+            <div class="contact-link-label">LinkedIn</div>
+            <div class="contact-link-val">linkedin.com/in/usmanalicloud</div>
+          </div>
+        </a>
+        <a href="https://github.com/usmanaliclouds-jpg" target="_blank" class="contact-link">
+          <div class="contact-link-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58 0-.28-.01-1.03-.02-2.03-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.08 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.51 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          </div>
+          <div>
+            <div class="contact-link-label">GitHub</div>
+            <div class="contact-link-val">github.com/usmanaliclouds-jpg</div>
+          </div>
+        </a>
+        <a href="tel:+923215866228" class="contact-link">
+          <div class="contact-link-icon">📱</div>
+          <div>
+            <div class="contact-link-label">Phone</div>
+            <div class="contact-link-val">+92 321 5866228</div>
+          </div>
+        </a>
+      </div>
+      <div class="contact-cta fade-up">
+        <div class="contact-cta-title">Let's build something great.</div>
+        <div class="contact-cta-desc">
+          I'm a second-year CS student passionate about backend development, DevSecOps, and intelligent systems. I bring a builder's mindset and a strong fundamentals base — happy to chat about what I can contribute to your team.
+        </div>
+        <a href="mailto:usmanali.clouds@gmail.com" class="btn btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Send an Email
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    Designed &amp; built by Usman Ali Shahid &nbsp;·&nbsp; 2026
+  </div>
+</footer>
+
+<!-- ─── JS ─────────────────────────────────────────────────── -->
+<script>
+  // Navbar scroll shadow
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Hamburger
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    });
+  });
+
+  // Typing effect
+  const roles = [
+    'intelligent systems.',
+    'backend services.',
+    'algorithm visualizers.',
+    'full-stack apps.',
+    'things from scratch.',
+  ];
+  let roleIdx = 0, charIdx = 0, deleting = false;
+  const typedEl = document.getElementById('typed-text');
+
+  function type() {
+    const current = roles[roleIdx];
+    if (!deleting) {
+      typedEl.textContent = current.slice(0, ++charIdx);
+      if (charIdx === current.length) {
+        deleting = true;
+        return setTimeout(type, 1800);
+      }
+    } else {
+      typedEl.textContent = current.slice(0, --charIdx);
+      if (charIdx === 0) {
+        deleting = false;
+        roleIdx = (roleIdx + 1) % roles.length;
+        return setTimeout(type, 300);
+      }
+    }
+    setTimeout(type, deleting ? 45 : 80);
+  }
+  type();
+
+  // Intersection Observer fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
